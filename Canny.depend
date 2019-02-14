@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1538882786 source:c:\users\jsm\desktop\arm\marr-hildreth\marrh.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
