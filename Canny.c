@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <math.h>
 
+//Definitions of picture sizes
 #define  PICSIZE 256
 #define  MAXMASK 100
 
+//Global picture variables
 int pic[PICSIZE][PICSIZE];
 double outpicx[PICSIZE][PICSIZE];
 double outpicy[PICSIZE][PICSIZE];
@@ -42,7 +44,7 @@ int main(int argc, char** argv)
     argc--;
     argv++;
 
-    //Get the first output fileprintf("Hello World1");
+    //Get the first output file name
     foobar = *argv;
     fo1=fopen(foobar,"wb");
 
@@ -50,7 +52,7 @@ int main(int argc, char** argv)
     argc--;
     argv++;
 
-    //Get the second output file
+    //Get the second output file name
     foobar = *argv;
     fo2=fopen(foobar,"wb");
 
@@ -58,7 +60,7 @@ int main(int argc, char** argv)
     argc--;
     argv++;
 
-    //Get the third output file
+    //Get the third output file name
     foobar = *argv;
     fo3=fopen(foobar,"wb");
 
@@ -66,7 +68,7 @@ int main(int argc, char** argv)
     argc--;
     argv++;
 
-    //Get sigma
+    //Get sigma value
     foobar = *argv;
     sig = atof(foobar);
 
@@ -74,7 +76,7 @@ int main(int argc, char** argv)
     argc--;
     argv++;
 
-    //Get the percentage for part 4
+    //Get the percentage for part 4 (for threshold)
     foobar = *argv;
     percent = atof(foobar);
 
@@ -82,7 +84,7 @@ int main(int argc, char** argv)
     //get the masked radius as sigma * 3
     mr = (int)(sig * 3);
 
-    //Get the maximum mask value as 1/2 of the image
+    //Get the maximum mask value as 1/2 of the image pixel size
     centx = (MAXMASK / 2);
     centy = (MAXMASK / 2);
 
@@ -98,8 +100,7 @@ int main(int argc, char** argv)
         }
     }
 
-    //Perform the derivative on the picture
-    //Double up on this and make xmask, ymask
+    //Get the values using the first derivative of the gaussian function
     for (p=-mr;p<=mr;p++)
     {
         for (q=-mr;q<=mr;q++)
@@ -114,7 +115,7 @@ int main(int argc, char** argv)
         }
     }
 
-    //Convolution
+    //Convolution with the gaussian function
     for (i=mr;i<=255-mr;i++)
     {
         for (j=mr;j<=255-mr;j++)
@@ -134,7 +135,7 @@ int main(int argc, char** argv)
         }
     }
 
-    //Getting the gradient magnitude
+    //Getting the gradient magnitude of the input image
     maxival = 0;
     for (i=mr;i<256-mr;i++)
     {
@@ -146,10 +147,10 @@ int main(int argc, char** argv)
         }
     }
 
-    //Output the header to the file
+    //Output the header of a pgm format to the file
     fprintf(fo1,"P5\n256 256\n255\n");
 
-    //Doing the scaling of the image afterwards and writing it to the file
+    //Doing the scaling of the image afterwards and writing it to the file so there is no value overflow
     for (i=0;i<256;i++)
     {
         for (j=0;j<256;j++)
@@ -159,7 +160,7 @@ int main(int argc, char** argv)
         }
     }
 
-    //Algorithm for getting the peaks
+    //Canny peaks tracing algorithm (similar to a topological map)
     for(i=mr;i<256-mr;i++)
     {
         for(j=mr;j<256-mr;j++)
@@ -202,10 +203,10 @@ int main(int argc, char** argv)
         }
     }
 
-    //Output the header to the file
+    //Output the pgm header to the file
     fprintf(fo2,"P5\n256 256\n255\n");
 
-    //Writing it to the file
+    //Writing it to the second file
     for (i=0;i<256;i++)
     {
         for (j=0;j<256;j++)
@@ -257,6 +258,8 @@ int main(int argc, char** argv)
 
     }
 
+    //Associates values below the threshold percentage but above the low
+    //threshold value with an edge if the value is connected to a high value
     flag=1;
     while(flag)
     {
@@ -285,10 +288,10 @@ int main(int argc, char** argv)
         }
     }
 
-    //Output the header to the file
+    //Output the pgm header to the third file
     fprintf(fo3,"P5\n256 256\n255\n");
 
-    //Writing it to the file
+    //Writing it to the third file
     for (i=0;i<256;i++)
     {
         for (j=0;j<256;j++)
