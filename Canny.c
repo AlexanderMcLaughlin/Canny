@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-//Testing the functionality of git with VSCode
-
 //Definitions of picture sizes
 #define  PICSIZE 256
 #define  MAXMASK 100
